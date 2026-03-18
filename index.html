@@ -3,346 +3,887 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ada Sesuatu yang Ingin Aku Katakan</title>
+    <title>ClickCoin Dark - Ultra Strict</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        
         body {
-            font-family: 'Quicksand', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #0f172a 50%, #1e3a8a 100%);
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .coin-btn {
+            background: linear-gradient(145deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4), 
+                        inset 0 -5px 15px rgba(0,0,0,0.3),
+                        inset 0 5px 15px rgba(255,255,255,0.2);
+            transition: all 0.1s;
+            position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            border: 2px solid rgba(96, 165, 250, 0.5);
         }
-
-        /* Animasi Transisi Slide */
-        .slide {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-
-        .slide.active {
-            display: flex;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Animasi Hati Melayang */
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.2);
-                opacity: 0;
-            }
-        }
-
-        .heart {
+        
+        .coin-btn::before {
+            content: '';
             position: absolute;
-            color: rgba(255, 255, 255, 0.6);
-            animation: floatUp linear infinite;
-            bottom: -50px;
-            pointer-events: none;
-            z-index: 0;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
-
-        /* Tombol Interaktif */
-        .btn-bounce {
-            transition: transform 0.2s;
+        
+        .coin-btn:active::before {
+            width: 300px;
+            height: 300px;
         }
-        .btn-bounce:active {
+        
+        .coin-btn:active {
             transform: scale(0.95);
         }
 
-        /* Efek Glow */
-        .glow-text {
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 105, 180, 0.5);
+        .coin-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: grayscale(100%);
         }
 
-        /* Animasi Goyang untuk "Harus Iya" */
+        .floating-coin {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+            font-size: 18px;
+            font-weight: bold;
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.8);
+            z-index: 9999;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-80px) scale(1.3); }
+        }
+
+        .kupon-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #172554 100%);
+            border: 3px dashed #3b82f6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kupon-card::before {
+            content: 'SECURE';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 60px;
+            opacity: 0.05;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .ban-overlay {
+            background: linear-gradient(135deg, #000000 0%, #1e3a8a 100%);
+        }
+
+        .warning-box {
+            animation: pulse-border 1s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+
+        .max-limit-reached {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            animation: shake 0.5s infinite;
+        }
+
         @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px) rotate(-5deg); }
-            50% { transform: translateX(5px) rotate(5deg); }
-            75% { transform: translateX(-5px) rotate(-5deg); }
-            100% { transform: translateX(0); }
-        }
-        .shake-anim {
-            animation: shake 0.4s ease-in-out;
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
-        /* Animasi Pop */
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            80% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
+        .stat-bar {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(96, 165, 250, 0.3);
         }
-        .pop-in {
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+        .click-tracker {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
-        
-        /* Animasi Pulse untuk Made by */
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
+
+        .limit-reached-banner {
+            background: linear-gradient(90deg, #dc2626, #991b1b);
+            border: 2px solid #fca5a5;
+            animation: flash 1s infinite;
         }
-        .animate-pulse-slow {
-            animation: pulse-slow 3s ease-in-out infinite;
+
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
     </style>
+<base target="_blank">
 </head>
-<body class="h-screen w-screen flex items-center justify-center relative">
+<body class="text-white overflow-x-hidden">
 
-    <!-- Background Hearts Container -->
-    <div id="hearts-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
-
-    <!-- Main Card Container -->
-    <div class="relative z-10 bg-white/30 backdrop-blur-md border border-white/40 shadow-2xl rounded-3xl p-8 w-11/12 max-w-md text-center min-h-[400px] flex flex-col justify-center items-center">
+    <!-- BAN OVERLAY -->
+    <div id="banOverlay" class="fixed inset-0 ban-overlay z-[9999] hidden flex-col items-center justify-center text-center p-6">
+        <div class="text-6xl mb-4">🚫</div>
+        <h2 class="text-3xl font-bold mb-2 text-red-500">AKUN DIBANNED</h2>
+        <p class="text-lg mb-4 text-blue-200">Pelanggaran ke-<span id="banCountDisplay">1</span></p>
         
-        <!-- SLIDE 1: Input Nama -->
-        <div id="slide-1" class="slide active flex-col w-full">
-            <div class="mb-6 text-5xl">💌</div>
-            <h1 class="text-2xl font-bold text-pink-600 mb-6">Halo! Ada surat cinta nih...</h1>
+        <div class="bg-red-900/50 border-2 border-red-500 rounded-2xl p-6 mb-4 max-w-md w-full">
+            <div class="text-5xl mb-2">💸</div>
+            <h3 class="text-xl font-bold text-red-400 mb-4">SEMUA DATA DIRESET</h3>
             
-            <div class="space-y-4 w-full">
-                <div class="text-left">
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Kamu (Penerima)</label>
-                    <input type="text" id="input-penerima" class="w-full px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-pink-400 bg-white/80 outline-none transition" placeholder="Contoh: Budi">
+            <div class="space-y-2 text-left text-sm mb-4">
+                <div class="flex justify-between text-red-200">
+                    <span>❌ Rupiah:</span>
+                    <span class="font-bold">Rp <span id="resetRupiah">0</span> → Rp 0</span>
                 </div>
-                <div class="text-left">
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Pengirim</label>
-                    <input type="text" id="input-pengirim" class="w-full px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-pink-400 bg-white/80 outline-none transition" placeholder="Contoh: Ani">
+                <div class="flex justify-between text-red-200">
+                    <span>❌ Total Klik:</span>
+                    <span class="font-bold"><span id="resetClicks">0</span> → 0</span>
                 </div>
-                <button onclick="goToSlide(2)" class="btn-bounce w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-xl shadow-lg transform transition hover:-translate-y-1">
-                    Lanjutkan ✨
-                </button>
+                <div class="flex justify-between text-red-200">
+                    <span>❌ Kupon:</span>
+                    <span class="font-bold"><span id="resetKupon">0</span> → Dihapus</span>
+                </div>
             </div>
-        </div>
-
-        <!-- SLIDE 2: Pertanyaan 1 -->
-        <div id="slide-2" class="slide flex-col w-full">
-            <div class="mb-4 text-4xl animate-bounce">🤔</div>
-            <h2 id="text-slide-2" class="text-xl font-bold text-gray-800 mb-8 leading-relaxed">
-                <!-- JS will inject text here -->
-            </h2>
-            <div class="flex gap-4 justify-center w-full">
-                <button onclick="goToSlide(3)" class="btn-bounce flex-1 bg-green-400 hover:bg-green-500 text-white font-bold py-3 rounded-xl shadow-md">
-                    Iya, Tau 😊
-                </button>
-                <button onclick="goToSlide(3)" class="btn-bounce flex-1 bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-xl shadow-md">
-                    Gak Tau 🤷
-                </button>
-            </div>
-        </div>
-
-        <!-- SLIDE 3: Pertanyaan 2 -->
-        <div id="slide-3" class="slide flex-col w-full">
-            <div class="mb-4 text-4xl animate-pulse">😳</div>
-            <h2 id="text-slide-3" class="text-xl font-bold text-gray-800 mb-8 leading-relaxed">
-                <!-- JS will inject text here -->
-            </h2>
-            <div class="flex gap-4 justify-center w-full">
-                <button onclick="goToSlide(4)" class="btn-bounce flex-1 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-xl shadow-md">
-                    Iya, Tau 💕
-                </button>
-                <button onclick="goToSlide(3)" class="btn-bounce flex-1 bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-xl shadow-md">
-                    Gak Tau 🙈
-                </button>
-            </div>
-            <p class="text-xs text-gray-500 mt-4">*pssst, coba pencet yang lain deh</p>
-        </div>
-
-        <!-- SLIDE 4: Pernyataan Cinta -->
-        <div id="slide-4" class="slide flex-col w-full">
-            <div class="mb-4 text-5xl">💖</div>
-            <h2 id="text-slide-4" class="text-2xl font-bold text-pink-600 mb-6 glow-text">
-                <!-- JS will inject text here -->
-            </h2>
-            <p class="text-gray-700 mb-8">Mau gak jadi pacar aku?</p>
             
-            <div class="flex gap-4 justify-center w-full relative">
-                <button id="btn-ya-slide-4" onclick="goToSlide(5)" class="btn-bounce flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-xl shadow-lg text-lg transform transition hover:scale-105">
-                    MAU DONG! ❤️
-                </button>
-                <button id="btn-tidak-slide-4" onclick="forceYes(this)" class="btn-bounce flex-1 bg-gray-300 text-gray-500 font-bold py-4 rounded-xl shadow-sm cursor-not-allowed">
-                    Engga
-                </button>
+            <div class="border-t border-red-500/50 pt-4">
+                <p class="text-sm text-yellow-300 mb-2">Durasi Ban:</p>
+                <div class="text-4xl font-bold text-red-500 font-mono" id="banTimer">00:00:00</div>
+                <p class="text-xs text-red-300 mt-2" id="banDurationText">2 Jam</p>
             </div>
-            <p id="msg-error-4" class="text-red-500 font-bold mt-4 hidden text-sm">Harus Iya! Gak boleh engga! Wajib Iya! 😤</p>
         </div>
+        
+        <p class="text-xs text-blue-300 max-w-md mb-4">
+            <i class="fas fa-info-circle mr-1"></i>
+            Durasi: 2→4→8→16→24 jam
+        </p>
+        
+        <button onclick="checkBanStatus()" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-bold transition">
+            <i class="fas fa-sync-alt mr-2"></i>Cek Status
+        </button>
+    </div>
 
-        <!-- SLIDE 5: Konfirmasi Final -->
-        <div id="slide-5" class="slide flex-col w-full">
-            <div class="mb-4 text-4xl">🥺👉👈</div>
-            <h2 class="text-xl font-bold text-gray-800 mb-6">Beneran nih mau jadi pacar aku?</h2>
-            <p class="text-sm text-gray-600 mb-8">Janji gak bakal nyesel?</p>
-            
-            <div class="flex gap-4 justify-center w-full">
-                <button id="btn-final-ya" onclick="celebrate()" class="btn-bounce w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold py-4 rounded-xl shadow-xl text-lg">
-                    IYA BENERAN! 🥰
-                </button>
-            </div>
-             <button id="btn-final-tidak" onclick="forceYesFinal(this)" class="mt-4 text-gray-400 text-sm hover:text-red-400 underline">
-                Gak jadi deh
+    <!-- WARNING MODAL -->
+    <div id="warningModal" class="fixed inset-0 bg-black/95 z-[9998] hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-6 max-w-sm w-full text-center border-2 border-yellow-500">
+            <div class="text-5xl mb-3">⚠️</div>
+            <h2 class="text-2xl font-bold text-yellow-400 mb-2">PERINGATAN!</h2>
+            <p class="text-blue-200 mb-4" id="warningText">Terlalu cepat!</p>
+            <button onclick="closeWarning()" class="bg-yellow-600 hover:bg-yellow-700 w-full py-3 rounded-xl font-bold">
+                Mengerti
             </button>
-            <p id="msg-error-5" class="text-red-500 font-bold mt-2 hidden text-sm">Gak ada pilihan engga! Harus mau! 😡</p>
         </div>
+    </div>
 
-        <!-- SLIDE 6: Success -->
-        <div id="slide-6" class="slide flex-col w-full">
-            <div class="mb-6 text-6xl pop-in">🎉💑🎉</div>
-            <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 mb-4 pop-in" style="animation-delay: 0.2s">
-                Yeayyy!
-            </h2>
-            <p id="text-final" class="text-lg text-gray-800 font-semibold mb-6 pop-in" style="animation-delay: 0.4s">
-                <!-- JS Text -->
+    <!-- MAX CLICK WARNING -->
+    <div id="maxClickModal" class="fixed inset-0 bg-black/95 z-[9997] hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-6 max-w-sm w-full text-center border-2 border-red-500 warning-box">
+            <div class="text-5xl mb-3">🚫</div>
+            <h2 class="text-2xl font-bold text-red-400 mb-2">TERLALU CEPAT!</h2>
+            <div class="bg-red-900/30 rounded-xl p-4 mb-4 border border-red-500/50">
+                <p class="text-lg text-red-300 font-bold mb-2">1 DETIK MAX HANYA 2 CLICK</p>
+                <p class="text-sm text-blue-300">Klik terlalu banyak terdeteksi!</p>
+            </div>
+            <p class="text-xs text-yellow-300 mb-4">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                Jika terus dilanggar, akun akan dibanned!
             </p>
-            <div class="p-4 bg-pink-100 rounded-xl border border-pink-200 pop-in mb-6" style="animation-delay: 0.6s">
-                <p class="text-pink-800 text-sm">Status: <span class="font-bold">Pacaran 💕</span></p>
-                <p class="text-pink-800 text-xs mt-1">Mulai dari sekarang</p>
+            <button onclick="closeMaxClickWarning()" class="bg-red-600 hover:bg-red-700 w-full py-3 rounded-xl font-bold animate-pulse">
+                Saya Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- MAX SALDO MODAL -->
+    <div id="maxSaldoModal" class="fixed inset-0 bg-black/95 z-[9996] hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-6 max-w-sm w-full text-center border-2 border-orange-500">
+            <div class="text-5xl mb-3">💰</div>
+            <h2 class="text-2xl font-bold text-orange-400 mb-2">SALDO MAKSIMAL!</h2>
+            <div class="bg-orange-900/30 rounded-xl p-4 mb-4 border border-orange-500/50">
+                <p class="text-lg text-orange-300 font-bold mb-2">Rp 20.000</p>
+                <p class="text-sm text-blue-300">Anda sudah mencapai batas maksimal saldo!</p>
+            </div>
+            <p class="text-xs text-yellow-300 mb-4">
+                Tidak bisa menambah saldo lagi.<br>
+                Silakan buat kupon untuk menarik dana.
+            </p>
+            <button onclick="closeMaxSaldoModal()" class="bg-orange-600 hover:bg-orange-700 w-full py-3 rounded-xl font-bold">
+                Buat Kupon Sekarang
+            </button>
+        </div>
+    </div>
+
+    <!-- HOURLY MODAL -->
+    <div id="hourlyModal" class="fixed inset-0 bg-black/90 z-[9995] hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-8 max-w-sm w-full text-center border-2 border-blue-500">
+            <div class="text-5xl mb-4 text-blue-glow">⏰</div>
+            <h2 class="text-2xl font-bold text-blue-400 mb-4">Sudah 1 Jam!</h2>
+            <p class="text-blue-200 mb-6">Lanjutkan mining?</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="continuePlaying(true)" class="bg-blue-600 hover:bg-blue-700 py-3 rounded-xl font-bold">
+                    ✅ Lanjut
+                </button>
+                <button onclick="continuePlaying(false)" class="bg-red-600 hover:bg-red-700 py-3 rounded-xl font-bold">
+                    ❌ Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-md mx-auto min-h-screen flex flex-col p-4 pb-24">
+        
+        <!-- Header -->
+        <div class="glass-panel rounded-2xl p-4 mb-4 border-l-4 border-blue-500">
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-2xl border-2 border-blue-400">
+                        💎
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-blue-300">ClickCoin Dark</h1>
+                        <p class="text-xs text-blue-400">1 Click = 1 Rupiah</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-blue-400">Sesi</div>
+                    <div id="sessionTimer" class="font-mono text-sm text-blue-300 bg-blue-900/30 px-3 py-1 rounded-lg">00:00:00</div>
+                </div>
             </div>
             
-            <!-- Made by ZKAEl -->
-            <div class="mt-4 pop-in" style="animation-delay: 0.8s">
-                <p class="text-xs text-gray-500 animate-pulse-slow tracking-widest uppercase">
-                    Made by <span class="font-bold text-pink-600">ZKAEl</span> 💻
-                </p>
+            <!-- Click Speed Monitor -->
+            <div class="click-tracker rounded-lg p-2 mb-2 flex justify-between items-center">
+                <span class="text-xs text-blue-300"><i class="fas fa-tachometer-alt mr-1"></i>Kecepatan:</span>
+                <span id="clickSpeed" class="font-bold text-cyan-400">0 click/detik</span>
+            </div>
+
+            <!-- Warning Indicator -->
+            <div id="warningIndicator" class="hidden bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-2 text-center">
+                <span class="text-xs text-yellow-300 font-bold">⚠️ Warning: Jangan terlalu cepat!</span>
             </div>
         </div>
 
+        <!-- Max Saldo Banner (Hidden by default) -->
+        <div id="maxSaldoBanner" class="hidden limit-reached-banner rounded-xl p-4 mb-4 text-center">
+            <div class="text-2xl mb-1">🛑</div>
+            <h3 class="font-bold text-white">SALDO MAKSIMAL TERCAPAI!</h3>
+            <p class="text-sm text-red-100">Rp 20.000 - Tidak bisa nambah lagi</p>
+        </div>
+
+        <!-- Balance Display -->
+        <div class="grid grid-cols-1 gap-3 mb-4">
+            <div class="glass-panel rounded-2xl p-6 text-center border-t-4 border-cyan-500 relative overflow-hidden">
+                <div class="absolute top-2 right-2 w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></div>
+                <div class="text-3xl mb-1">💵</div>
+                <div class="text-sm text-blue-300 mb-1">Saldo Anda</div>
+                <div id="rupiahDisplay" class="text-4xl font-bold text-cyan-400">Rp 0</div>
+                <div class="text-xs text-blue-400 mt-2">Max: Rp 20.000</div>
+                
+                <!-- Progress bar to max saldo -->
+                <div class="w-full bg-blue-900/50 rounded-full h-2 mt-3">
+                    <div id="saldoProgress" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-2 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Limit Info -->
+        <div class="glass-panel rounded-xl p-3 mb-4 border-l-4 border-purple-500">
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-purple-300"><i class="fas fa-calendar-day mr-1"></i>Limit Harian:</span>
+                <span class="font-bold text-purple-400">Rp 5.000</span>
+            </div>
+            <div class="w-full bg-purple-900/30 rounded-full h-2 mt-2">
+                <div id="dailyProgress" class="bg-purple-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-purple-400 mt-1">
+                <span>Terpakai: <span id="dailyUsed">Rp 0</span></span>
+                <span>Sisa: <span id="dailyRemaining">Rp 5.000</span></span>
+            </div>
+        </div>
+
+        <!-- Click Button -->
+        <div class="flex-1 flex items-center justify-center mb-4 relative">
+            <button id="clickBtn" onclick="handleClick(event)" 
+                class="coin-btn w-64 h-64 rounded-full flex flex-col items-center justify-center text-white font-bold relative z-10">
+                <div class="text-8xl mb-2 filter drop-shadow-lg">💎</div>
+                <div class="text-2xl drop-shadow-md">CLICK!</div>
+                <div class="text-sm text-blue-100 mt-1">+Rp 1</div>
+            </button>
+            
+            <!-- Decorative rings -->
+            <div class="absolute w-72 h-72 border-2 border-blue-500/30 rounded-full animate-ping pointer-events-none"></div>
+            <div class="absolute w-80 h-80 border border-blue-400/20 rounded-full pointer-events-none"></div>
+        </div>
+
+        <!-- Stats -->
+        <div class="glass-panel rounded-xl p-4 mb-4 grid grid-cols-3 gap-4 text-center">
+            <div>
+                <div class="text-xs text-blue-400 mb-1">Per Klik</div>
+                <div class="font-bold text-blue-300 text-lg">Rp 1</div>
+            </div>
+            <div>
+                <div class="text-xs text-blue-400 mb-1">Total Klik</div>
+                <div id="totalClicks" class="font-bold text-cyan-400 text-lg">0</div>
+            </div>
+            <div>
+                <div class="text-xs text-blue-400 mb-1">Kupon</div>
+                <div id="kuponCount" class="font-bold text-purple-400 text-lg">0</div>
+            </div>
+        </div>
+
+        <!-- My Kupon -->
+        <div class="glass-panel rounded-2xl p-4 mb-4 border-l-4 border-blue-500">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-blue-300"><i class="fas fa-ticket-alt mr-2"></i>Kupon Saya</h3>
+                <span class="text-xs bg-blue-500/30 px-3 py-1 rounded-full text-blue-300 border border-blue-500/50">
+                    Total: <span id="totalKupon" class="text-cyan-400 font-bold">0</span>
+                </span>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-3 mb-3 text-center border border-blue-400">
+                <i class="fas fa-camera text-white text-xl mb-1"></i>
+                <p class="text-xs font-bold text-white">WAJIB SCREENSHOT KUPON!</p>
+                <p class="text-xs text-blue-200">WA: 0813-9674-1367</p>
+            </div>
+
+            <div id="kuponList" class="space-y-3 max-h-48 overflow-y-auto">
+                <p class="text-center text-blue-500 text-sm py-4">Belum ada kupon</p>
+            </div>
+        </div>
+
+        <!-- Create Kupon -->
+        <div class="glass-panel rounded-2xl p-4 mb-4 border-l-4 border-cyan-500">
+            <h3 class="font-bold text-cyan-300 mb-3"><i class="fas fa-plus-circle mr-2"></i>Buat Kupon</h3>
+            
+            <div class="bg-blue-900/30 rounded-lg p-3 mb-3 text-sm border border-blue-500/30">
+                <div class="flex justify-between mb-1">
+                    <span class="text-blue-300">Min:</span>
+                    <span class="font-bold text-cyan-400">Rp 5.000</span>
+                </div>
+                <div class="flex justify-between mb-1">
+                    <span class="text-blue-300">Max/hari:</span>
+                    <span class="font-bold text-cyan-400">Rp 5.000</span>
+                </div>
+                <div class="flex justify-between text-base border-t border-blue-500/30 pt-2 mt-2">
+                    <span class="text-blue-300">Saldo:</span>
+                    <span id="createSaldo" class="font-bold text-cyan-400">Rp 0</span>
+                </div>
+            </div>
+
+            <button onclick="createKupon()" id="btnCreateKupon"
+                class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 py-3 rounded-xl font-bold text-white transition border border-cyan-400/50 disabled:opacity-50 disabled:cursor-not-allowed">
+                Buat Kupon Rp 5.000
+            </button>
+            
+            <p id="kuponError" class="text-xs text-red-400 mt-2 hidden text-center">
+                <i class="fas fa-exclamation-circle mr-1"></i>Saldo minimal Rp 5.000
+            </p>
+        </div>
+
+        <!-- WA Claim -->
+        <div class="glass-panel rounded-xl p-4 mb-20 border-l-4 border-green-500">
+            <p class="text-center text-sm text-blue-300 mb-3">Claim kupon via WhatsApp</p>
+            <a href="https://wa.me/6281396741367?text=Halo%20admin%20ClickCoin,%20saya%20mau%20claim%20kupon" 
+               target="_blank"
+               class="flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 py-4 rounded-xl font-bold text-white transition border border-green-400/30">
+                <i class="fab fa-whatsapp text-2xl"></i>
+                <div class="text-left">
+                    <div class="text-xs text-green-200">Hubungi Admin</div>
+                    <div class="text-lg">0813-9674-1367</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Custom Kupon Modal -->
+    <div id="customKuponModal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl p-6 max-w-sm w-full border-2 border-cyan-500">
+            <h3 class="text-xl font-bold text-center text-cyan-300 mb-4">Buat Kupon</h3>
+            <input type="number" id="customAmount" placeholder="5000" min="5000" max="5000" readonly
+                class="w-full bg-blue-900/50 border border-blue-500/50 rounded-xl px-4 py-3 text-center text-white font-bold text-lg mb-4 focus:outline-none focus:border-cyan-400 cursor-not-allowed"
+                value="5000">
+            <p class="text-xs text-center text-blue-400 mb-4">
+                <i class="fas fa-info-circle mr-1"></i>Hanya bisa Rp 5.000 per hari
+            </p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="closeCustomKupon()" class="bg-blue-900/50 hover:bg-blue-800 py-3 rounded-xl font-bold text-blue-300 border border-blue-500/30">Batal</button>
+                <button onclick="confirmCustomKupon()" class="bg-cyan-600 hover:bg-cyan-500 py-3 rounded-xl font-bold text-white border border-cyan-400">Buat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-900 text-white px-6 py-3 rounded-full shadow-lg border border-blue-400 hidden items-center gap-2 z-[9999] font-bold">
+        <span id="notifIcon">✅</span>
+        <span id="notifText">Notifikasi</span>
     </div>
 
     <script>
-        // Data Storage
-        let data = {
-            penerima: '',
-            pengirim: ''
+        // Game State
+        let gameState = {
+            rupiah: 0,
+            totalClicks: 0,
+            kuponList: [],
+            todayWithdraw: 0,
+            lastWithdrawDate: new Date().toDateString(),
+            lastHourlyCheck: Date.now(),
+            sessionStart: Date.now(),
+            banCount: 0,
+            banEndTime: null,
+            isBanned: false,
+            warningCount: 0
         };
 
-        // Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            createFloatingHearts();
-        });
+        // Strict Limits
+        const MAX_CLICKS_PER_SECOND = 2;
+        const MAX_SALDO = 20000;
+        const MAX_DAILY_WITHDRAW = 5000;
+        const CLICK_TIMEOUT = 1000; // 1 second window
 
-        // Navigation Logic
-        function goToSlide(slideNumber) {
-            // Validasi Slide 1
-            if (slideNumber === 2) {
-                const penerima = document.getElementById('input-penerima').value.trim();
-                const pengirim = document.getElementById('input-pengirim').value.trim();
+        // Click tracking
+        let clickHistory = [];
+        let lastClickTime = 0;
+        let clickSpeed = 0;
+
+        // Load game
+        function loadGame() {
+            const saved = localStorage.getItem('clickCoinStrictV1');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                const today = new Date().toDateString();
                 
-                if (!penerima || !pengirim) {
-                    alert("Isi nama dulu yaa sayangkuu 😘");
+                if (parsed.lastWithdrawDate !== today) {
+                    parsed.todayWithdraw = 0;
+                    parsed.lastWithdrawDate = today;
+                }
+                
+                gameState = { ...gameState, ...parsed };
+            }
+            
+            if (gameState.isBanned && gameState.banEndTime > Date.now()) {
+                showBanScreen();
+            } else if (gameState.isBanned) {
+                gameState.isBanned = false;
+                saveGame();
+            }
+            
+            updateDisplay();
+            renderKuponList();
+            startTimers();
+        }
+
+        function saveGame() {
+            localStorage.setItem('clickCoinStrictV1', JSON.stringify(gameState));
+        }
+
+        function startTimers() {
+            // Session timer
+            setInterval(() => {
+                const elapsed = Math.floor((Date.now() - gameState.sessionStart) / 1000);
+                const h = Math.floor(elapsed / 3600).toString().padStart(2, '0');
+                const m = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
+                const s = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('sessionTimer').textContent = `${h}:${m}:${s}`;
+            }, 1000);
+
+            // Hourly check
+            setInterval(() => {
+                if (Date.now() - gameState.lastHourlyCheck >= 3600000) {
+                    showHourlyModal();
+                }
+            }, 60000);
+
+            // Click speed reset every second
+            setInterval(() => {
+                clickSpeed = 0;
+                document.getElementById('clickSpeed').textContent = '0 click/detik';
+            }, 1000);
+        }
+
+        function handleClick(e) {
+            if (gameState.isBanned) return;
+            
+            const now = Date.now();
+            
+            // Check max saldo first
+            if (gameState.rupiah >= MAX_SALDO) {
+                showMaxSaldoModal();
+                return;
+            }
+            
+            // Track clicks in last second
+            clickHistory = clickHistory.filter(time => now - time < CLICK_TIMEOUT);
+            clickHistory.push(now);
+            
+            const clicksInLastSecond = clickHistory.length;
+            clickSpeed = clicksInLastSecond;
+            document.getElementById('clickSpeed').textContent = clicksInLastSecond + ' click/detik';
+            
+            // STRICT: Max 2 clicks per second
+            if (clicksInLastSecond > MAX_CLICKS_PER_SECOND) {
+                showMaxClickWarning();
+                // Remove the extra click
+                clickHistory.pop();
+                return;
+            }
+            
+            // Add rupiah (1 click = 1 rupiah)
+            const newAmount = gameState.rupiah + 1;
+            
+            // Check if would exceed max saldo
+            if (newAmount > MAX_SALDO) {
+                gameState.rupiah = MAX_SALDO;
+                showMaxSaldoModal();
+            } else {
+                gameState.rupiah = newAmount;
+            }
+            
+            gameState.totalClicks++;
+            
+            // Visual feedback
+            createFloatingText(e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY, '+Rp 1');
+            
+            saveGame();
+            updateDisplay();
+            
+            // Button animation
+            const btn = document.getElementById('clickBtn');
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 100);
+        }
+
+        function createFloatingText(x, y, text) {
+            const el = document.createElement('div');
+            el.className = 'floating-coin';
+            el.textContent = text;
+            el.style.left = (x - 20) + 'px';
+            el.style.top = (y - 20) + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+
+        function showMaxClickWarning() {
+            document.getElementById('maxClickModal').classList.remove('hidden');
+            document.getElementById('maxClickModal').classList.add('flex');
+            gameState.warningCount++;
+            
+            // Auto-ban after 3 warnings for speed violation
+            if (gameState.warningCount >= 3) {
+                setTimeout(() => {
+                    closeMaxClickWarning();
+                    executeBan('Terlalu banyak pelanggaran kecepatan!');
+                }, 2000);
+            }
+            
+            saveGame();
+        }
+
+        function closeMaxClickWarning() {
+            document.getElementById('maxClickModal').classList.add('hidden');
+            document.getElementById('maxClickModal').classList.remove('flex');
+        }
+
+        function showMaxSaldoModal() {
+            document.getElementById('maxSaldoModal').classList.remove('hidden');
+            document.getElementById('maxSaldoModal').classList.add('flex');
+            document.getElementById('maxSaldoBanner').classList.remove('hidden');
+        }
+
+        function closeMaxSaldoModal() {
+            document.getElementById('maxSaldoModal').classList.add('hidden');
+            document.getElementById('maxSaldoModal').classList.remove('flex');
+        }
+
+        function updateDisplay() {
+            // Update rupiah display
+            document.getElementById('rupiahDisplay').textContent = 'Rp ' + gameState.rupiah.toLocaleString();
+            document.getElementById('createSaldo').textContent = 'Rp ' + gameState.rupiah.toLocaleString();
+            document.getElementById('totalClicks').textContent = gameState.totalClicks.toLocaleString();
+            document.getElementById('kuponCount').textContent = gameState.kuponList.length;
+            document.getElementById('totalKupon').textContent = gameState.kuponList.length;
+            
+            // Saldo progress bar
+            const saldoPercent = (gameState.rupiah / MAX_SALDO) * 100;
+            document.getElementById('saldoProgress').style.width = saldoPercent + '%';
+            
+            // Daily limit progress
+            const dailyPercent = (gameState.todayWithdraw / MAX_DAILY_WITHDRAW) * 100;
+            document.getElementById('dailyProgress').style.width = dailyPercent + '%';
+            document.getElementById('dailyUsed').textContent = 'Rp ' + gameState.todayWithdraw.toLocaleString();
+            document.getElementById('dailyRemaining').textContent = 'Rp ' + (MAX_DAILY_WITHDRAW - gameState.todayWithdraw).toLocaleString();
+            
+            // Update button state
+            const btn = document.getElementById('btnCreateKupon');
+            const error = document.getElementById('kuponError');
+            
+            if (gameState.rupiah < MAX_DAILY_WITHDRAW) {
+                btn.disabled = true;
+                error.classList.remove('hidden');
+                error.textContent = 'Saldo minimal Rp 5.000 untuk membuat kupon!';
+            } else if (gameState.todayWithdraw >= MAX_DAILY_WITHDRAW) {
+                btn.disabled = true;
+                error.classList.remove('hidden');
+                error.textContent = 'Limit harian Rp 5.000 sudah tercapai!';
+            } else {
+                btn.disabled = false;
+                error.classList.add('hidden');
+            }
+            
+            // Show max saldo banner if reached
+            if (gameState.rupiah >= MAX_SALDO) {
+                document.getElementById('maxSaldoBanner').classList.remove('hidden');
+                document.getElementById('clickBtn').disabled = true;
+            }
+        }
+
+        function createKupon() {
+            if (gameState.rupiah < MAX_DAILY_WITHDRAW) {
+                showNotification('❌', 'Saldo minimal Rp 5.000!');
+                return;
+            }
+            
+            if (gameState.todayWithdraw >= MAX_DAILY_WITHDRAW) {
+                showNotification('❌', 'Limit harian sudah tercapai!');
+                return;
+            }
+            
+            // Deduct rupiah
+            gameState.rupiah -= MAX_DAILY_WITHDRAW;
+            gameState.todayWithdraw += MAX_DAILY_WITHDRAW;
+            
+            // Create kupon
+            const kupon = {
+                id: Date.now(),
+                code: 'CC' + String(gameState.kuponList.length + 1).padStart(6, '0'),
+                amount: MAX_DAILY_WITHDRAW,
+                date: new Date().toLocaleString('id-ID'),
+                security: Math.random().toString(36).substring(2, 8).toUpperCase()
+            };
+            
+            gameState.kuponList.unshift(kupon);
+            
+            saveGame();
+            updateDisplay();
+            renderKuponList();
+            showNotification('🎫', 'Kupon Rp 5.000 berhasil dibuat!');
+            showScreenshotReminder();
+        }
+
+        function renderKuponList() {
+            const container = document.getElementById('kuponList');
+            
+            if (gameState.kuponList.length === 0) {
+                container.innerHTML = '<p class="text-center text-blue-500 text-sm py-4">Belum ada kupon</p>';
+                return;
+            }
+            
+            container.innerHTML = gameState.kuponList.map(k => `
+                <div class="kupon-card rounded-xl p-4 relative">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-3 border-b border-blue-500/30 pb-2">
+                            <div>
+                                <div class="text-xs text-blue-400">No. Kupon</div>
+                                <div class="font-mono text-xl font-bold text-blue-300 tracking-wider">${k.code}</div>
+                            </div>
+                            <div class="bg-blue-600 text-white text-xs px-3 py-1 rounded-full border border-blue-400">
+                                VIA WA
+                            </div>
+                        </div>
+                        <div class="text-center mb-3">
+                            <div class="text-xs text-blue-400">NOMINAL</div>
+                            <div class="text-3xl font-bold text-cyan-400">Rp ${k.amount.toLocaleString()}</div>
+                        </div>
+                        <div class="bg-blue-900/50 rounded-lg p-2 mb-3 border border-blue-500/30">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-blue-400">Security:</span>
+                                <span class="font-mono text-blue-300 font-bold">${k.security}</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-blue-400">Dibuat:</span>
+                                <span class="text-blue-300">${k.date}</span>
+                            </div>
+                        </div>
+                        <div class="bg-red-900/30 border-2 border-red-500/50 rounded-lg p-2 text-center">
+                            <i class="fas fa-camera text-red-400 mr-1"></i>
+                            <span class="text-xs font-bold text-red-300">SCREENSHOT WAJIB!</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showScreenshotReminder() {
+            // Create modal for screenshot reminder
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="glass-panel rounded-3xl p-6 max-w-sm w-full text-center border-2 border-yellow-500 animate-bounce">
+                    <div class="text-5xl mb-3">📸</div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-2">Screenshot Kupon!</h3>
+                    <p class="text-sm text-blue-300 mb-4">Simpan screenshot kupon ini untuk claim.</p>
+                    <button onclick="this.closest('.fixed').remove()" class="bg-yellow-600 hover:bg-yellow-700 w-full py-3 rounded-xl font-bold text-white">
+                        Sudah Screenshot ✓
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function showNotification(icon, text) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notifIcon').textContent = icon;
+            document.getElementById('notifText').textContent = text;
+            notif.classList.remove('hidden');
+            notif.classList.add('flex');
+            
+            setTimeout(() => {
+                notif.classList.add('hidden');
+                notif.classList.remove('flex');
+            }, 3000);
+        }
+
+        function showHourlyModal() {
+            document.getElementById('hourlyModal').classList.remove('hidden');
+            document.getElementById('hourlyModal').classList.add('flex');
+        }
+
+        function continuePlaying(continueGame) {
+            document.getElementById('hourlyModal').classList.add('hidden');
+            document.getElementById('hourlyModal').classList.remove('flex');
+            
+            if (continueGame) {
+                gameState.lastHourlyCheck = Date.now();
+                saveGame();
+            } else {
+                location.reload();
+            }
+        }
+
+        function executeBan(reason = 'Pelanggaran sistem') {
+            gameState.banCount++;
+            const durations = [2, 4, 8, 16, 24];
+            const hours = durations[Math.min(gameState.banCount - 1, durations.length - 1)];
+            
+            gameState.banEndTime = Date.now() + (hours * 60 * 60 * 1000);
+            gameState.isBanned = true;
+            
+            // Reset data
+            const resetData = {
+                rupiah: gameState.rupiah,
+                clicks: gameState.totalClicks,
+                kupon: gameState.kuponList.length
+            };
+            
+            gameState.rupiah = 0;
+            gameState.totalClicks = 0;
+            gameState.kuponList = [];
+            gameState.todayWithdraw = 0;
+            
+            saveGame();
+            showBanScreen(resetData, hours);
+        }
+
+        function showBanScreen(resetData = null, hours = 2) {
+            const overlay = document.getElementById('banOverlay');
+            
+            if (resetData) {
+                document.getElementById('resetRupiah').textContent = resetData.rupiah.toLocaleString();
+                document.getElementById('resetClicks').textContent = resetData.clicks.toLocaleString();
+                document.getElementById('resetKupon').textContent = resetData.kupon;
+            }
+            
+            document.getElementById('banCountDisplay').textContent = gameState.banCount;
+            document.getElementById('banDurationText').textContent = hours + ' Jam';
+            
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            
+            startBanTimer();
+        }
+
+        function startBanTimer() {
+            const timerEl = document.getElementById('banTimer');
+            
+            const interval = setInterval(() => {
+                const remaining = gameState.banEndTime - Date.now();
+                
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    timerEl.textContent = '00:00:00';
+                    setTimeout(() => location.reload(), 2000);
                     return;
                 }
-                data.penerima = penerima;
-                data.pengirim = pengirim;
                 
-                // Update dynamic texts
-                document.getElementById('text-slide-2').innerHTML = `Hai ${data.penerima}, kamu tau gak ada yang suka sama kamu?`;
-                document.getElementById('text-slide-3').innerHTML = `Kamu tau gak kalo <b>${data.pengirim}</b> suka banget sama kamu?`;
-                document.getElementById('text-slide-4').innerHTML = `Aku (${data.pengirim}) udah lama suka sama kamu, ${data.penerima}!`;
-            }
-
-            // Hide all slides
-            document.querySelectorAll('.slide').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            // Show target slide
-            const target = document.getElementById(`slide-${slideNumber}`);
-            target.classList.add('active');
+                const h = Math.floor(remaining / (1000 * 60 * 60)).toString().padStart(2, '0');
+                const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                const s = Math.floor((remaining % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                
+                timerEl.textContent = `${h}:${m}:${s}`;
+            }, 1000);
         }
 
-        // "Force Yes" Logic
-        function forceYes(btn) {
-            const msg = document.getElementById('msg-error-4');
-            
-            // Animasi tombol bergerak (Tidak bisa dipencet)
-            const randomX = Math.random() * 100 - 50;
-            const randomY = Math.random() * 50 - 25;
-            const randomRot = Math.random() * 20 - 10;
-            
-            btn.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRot}deg)`;
-            
-            // Tampilkan pesan error
-            msg.classList.remove('hidden');
-            msg.classList.add('shake-anim');
-            
-            // Hapus animasi shake setelah selesai biar bisa shake lagi
-            setTimeout(() => {
-                msg.classList.remove('shake-anim');
-            }, 400);
-
-            // Perbesar tombol "Mau"
-            const btnYa = document.getElementById('btn-ya-slide-4');
-            let currentScale = btnYa.getAttribute('data-scale') || 1;
-            currentScale = parseFloat(currentScale) + 0.2;
-            btnYa.setAttribute('data-scale', currentScale);
-            btnYa.style.transform = `scale(${currentScale})`;
-        }
-
-        function forceYesFinal(btn) {
-            const msg = document.getElementById('msg-error-5');
-            msg.classList.remove('hidden');
-            msg.classList.add('shake-anim');
-            
-            btn.innerText = "Gak bisa pencet ini, pencet yang Iya!";
-            btn.classList.add('text-red-500', 'font-bold');
-            
-            setTimeout(() => {
-                msg.classList.remove('shake-anim');
-            }, 400);
-        }
-
-        // Final Celebration
-        function celebrate() {
-            goToSlide(6);
-            document.getElementById('text-final').innerText = `Selamat ya ${data.penerima}, kamu sekarang jadi pacarnya ${data.pengirim}!`;
-            
-            // Intensify hearts
-            for(let i=0; i<20; i++) {
-                setTimeout(createFloatingHearts, i * 200);
+        function checkBanStatus() {
+            if (Date.now() >= gameState.banEndTime) {
+                gameState.isBanned = false;
+                saveGame();
+                location.reload();
+            } else {
+                showNotification('⏳', 'Masih dalam masa ban!');
             }
         }
 
-        // Background Animation Logic
-        function createFloatingHearts() {
-            const container = document.getElementById('hearts-container');
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            
-            // Random properties
-            const size = Math.random() * 20 + 10;
-            const left = Math.random() * 100;
-            const duration = Math.random() * 5 + 5;
-            const delay = Math.random() * 2;
-            
-            heart.style.width = `${size}px`;
-            heart.style.height = `${size}px`;
-            heart.style.left = `${left}%`;
-            heart.style.animationDuration = `${duration}s`;
-            heart.style.animationDelay = `${delay}s`;
-            
-            // Random heart content (emoji or css shape)
-            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
-            heart.style.fontSize = `${size}px`;
-            
-            container.appendChild(heart);
-            
-            // Remove after animation
-            setTimeout(() => {
-                heart.remove();
-            }, (duration + delay) * 1000);
+        function closeWarning() {
+            document.getElementById('warningModal').classList.add('hidden');
+            document.getElementById('warningModal').classList.remove('flex');
         }
 
-        // Create initial hearts
-        setInterval(createFloatingHearts, 800);
+        // Prevent right click and dev tools
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key))) {
+                e.preventDefault();
+                showNotification('🛡️', 'Developer Tools diblokir!');
+            }
+        });
+
+        // Touch support
+        document.getElementById('clickBtn').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handleClick(e);
+        });
+
+        // Init
+        window.onload = loadGame;
+        
+        // Auto save every 3 seconds
+        setInterval(saveGame, 3000);
     </script>
 </body>
 </html>
